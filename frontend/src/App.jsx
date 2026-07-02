@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // 👇 Hardcoded to your Render backend (replace with your actual URL if different)
-const API_URL = 'https://idea-board.onrender.com/api';
+const API_URL = '/api';   // force relative
 
 function App() {
   const [ideas, setIdeas] = useState([]);
