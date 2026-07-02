@@ -16,12 +16,13 @@ function assignCategory(title, description) {
   return 'Feature Request';
 }
 
-// ✅ ALL routes must be async and await DB calls
+// ✅ All routes MUST be async and MUST await DB calls
 app.get('/api/ideas', async (req, res) => {
   try {
     const ideas = await db.getAllIdeas();
     res.json(ideas);
   } catch (err) {
+    console.error('GET /api/ideas error:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -33,10 +34,11 @@ app.post('/api/ideas', async (req, res) => {
   }
   try {
     const category = assignCategory(title, description);
-    const id = await db.addIdea(title, description, category);   // ← AWAIT is here
+    const id = await db.addIdea(title, description, category);   // ← AWAIT is CRITICAL
     const newIdea = { id, title, description, category, votes: 0 };
     res.status(201).json(newIdea);
   } catch (err) {
+    console.error('POST /api/ideas error:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -53,6 +55,7 @@ app.post('/api/ideas/:id/upvote', async (req, res) => {
     }
     res.json({ success: true });
   } catch (err) {
+    console.error('POST /api/ideas/:id/upvote error:', err);
     res.status(500).json({ error: err.message });
   }
 });
