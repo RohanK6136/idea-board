@@ -30,7 +30,7 @@ async function addIdea(title, description, category) {
     'INSERT INTO ideas (title, description, category) VALUES (?, ?, ?)',
     title, description, category
   );
-  return result.lastID;   // ← This returns the inserted row ID
+  return result.lastID;
 }
 
 async function upvoteIdea(id) {
