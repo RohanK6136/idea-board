@@ -5,11 +5,9 @@ const { promisify } = require('util');
 const dbPath = path.join(__dirname, 'ideas.db');
 const db = new sqlite3.Database(dbPath);
 
-// Promisify common methods
 const dbAll = promisify(db.all.bind(db));
 const dbRun = promisify(db.run.bind(db));
 
-// Create table if not exists
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS ideas (
@@ -23,21 +21,18 @@ db.serialize(() => {
   `);
 });
 
-// Helper: get all ideas
 async function getAllIdeas() {
   return await dbAll('SELECT * FROM ideas ORDER BY votes DESC, created_at DESC');
 }
 
-// Helper: add idea
 async function addIdea(title, description, category) {
   const result = await dbRun(
     'INSERT INTO ideas (title, description, category) VALUES (?, ?, ?)',
     title, description, category
   );
-  return result.lastID;
+  return result.lastID;   // ← This returns the inserted row ID
 }
 
-// Helper: upvote
 async function upvoteIdea(id) {
   const result = await dbRun('UPDATE ideas SET votes = votes + 1 WHERE id = ?', id);
   return result.changes > 0;

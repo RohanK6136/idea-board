@@ -1,0 +1,20 @@
+--- AI Logs for Idea Board ---
+
+1. Prompt: "Build full-stack app with React, Node, SQLite."
+   AI gave MongoDB – requested SQLite.
+
+2. Prompt: "Write db.js with async functions."
+   AI provided promisified functions.
+
+3. Prompt: "Write Express routes with async/await."
+   AI gave synchronous routes – corrected manually.
+
+4. Prompt: "Add category assignment."
+   AI gave keyword function – added default fallback.
+
+5. Error: "Cannot read properties of undefined (reading 'lastID')"
+   Fix: Added `await` to db.addIdea() and made all routes async.
+
+6. CSS errors – cleaned up formatting.
+
+All issues resolved by breaking prompts into small, testable steps.

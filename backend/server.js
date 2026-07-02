@@ -16,6 +16,7 @@ function assignCategory(title, description) {
   return 'Feature Request';
 }
 
+// ✅ All routes must be async and await DB calls
 app.get('/api/ideas', async (req, res) => {
   try {
     const ideas = await db.getAllIdeas();
@@ -32,7 +33,7 @@ app.post('/api/ideas', async (req, res) => {
   }
   try {
     const category = assignCategory(title, description);
-    const id = await db.addIdea(title, description, category);
+    const id = await db.addIdea(title, description, category);   // ← AWAIT is critical
     const newIdea = { id, title, description, category, votes: 0 };
     res.status(201).json(newIdea);
   } catch (err) {
@@ -56,6 +57,7 @@ app.post('/api/ideas/:id/upvote', async (req, res) => {
   }
 });
 
+// Serve static frontend (production)
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 app.get('*', (req, res) => {

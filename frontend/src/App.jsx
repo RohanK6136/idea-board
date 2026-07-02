@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+// 👇 Hardcoded to your Render backend (replace with your actual URL if different)
+const API_URL = 'https://idea-board.onrender.com/api';
 
 function App() {
   const [ideas, setIdeas] = useState([]);
@@ -21,7 +22,6 @@ function App() {
         throw new Error(`Server error: ${res.status} - ${errText}`);
       }
       const data = await res.json();
-      // Ensure data is an array before setting state
       if (Array.isArray(data)) {
         setIdeas(data);
       } else {
@@ -32,7 +32,7 @@ function App() {
     } catch (err) {
       console.error('Fetch error:', err);
       setError(err.message);
-      setIdeas([]); // reset to empty array on error
+      setIdeas([]);
     }
   };
 
