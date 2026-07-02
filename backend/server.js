@@ -16,13 +16,12 @@ function assignCategory(title, description) {
   return 'Feature Request';
 }
 
-// ✅ All routes with proper async/await and error handling
+// ✅ ALL routes must be async and await DB calls
 app.get('/api/ideas', async (req, res) => {
   try {
     const ideas = await db.getAllIdeas();
     res.json(ideas);
   } catch (err) {
-    console.error('GET /api/ideas error:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -34,11 +33,10 @@ app.post('/api/ideas', async (req, res) => {
   }
   try {
     const category = assignCategory(title, description);
-    const id = await db.addIdea(title, description, category);
+    const id = await db.addIdea(title, description, category);   // ← AWAIT is here
     const newIdea = { id, title, description, category, votes: 0 };
     res.status(201).json(newIdea);
   } catch (err) {
-    console.error('POST /api/ideas error:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -55,28 +53,17 @@ app.post('/api/ideas/:id/upvote', async (req, res) => {
     }
     res.json({ success: true });
   } catch (err) {
-    console.error('POST /api/ideas/:id/upvote error:', err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ✅ Serve static frontend (production)
+// Serve static frontend (production)
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
-// ✅ Start server with proper error handling
 app.listen(PORT, () => {
   console.log(`✅ Backend running on port ${PORT}`);
-});
-
-// ✅ Catch unhandled errors
-process.on('uncaughtException', (err) => {
-  console.error('❌ Uncaught Exception:', err);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('❌ Unhandled Rejection:', reason);
 });
