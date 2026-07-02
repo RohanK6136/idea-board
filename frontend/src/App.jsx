@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-// 👇 Hardcoded to your Render backend (replace with your actual URL if different)
-const API_URL = '/api';   // force relative
+const API_URL = import.meta.env.DEV
+  ? 'http://localhost:3001/api'
+  : '/api';
 
 function App() {
   const [ideas, setIdeas] = useState([]);

@@ -6,7 +6,19 @@ const dbPath = path.join(__dirname, 'ideas.db');
 const db = new sqlite3.Database(dbPath);
 
 const dbAll = promisify(db.all.bind(db));
-const dbRun = promisify(db.run.bind(db));
+function dbRun(sql, ...params) {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      // sqlite3 exposes statement metadata through the callback context.
+      resolve({ lastID: this.lastID, changes: this.changes });
+    });
+  });
+}
 
 db.serialize(() => {
   db.run(`
