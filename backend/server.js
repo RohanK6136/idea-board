@@ -5,65 +5,18 @@ const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// ✅ Fix CORS - allow your frontend domain
+app.use(cors({
+  origin: [
+    'https://idea-board-aj19.onrender.com',  // your frontend URL
+    'https://idea-board.onrender.com',       // your backend URL (if needed)
+    'http://localhost:5173',                 // local dev
+    'http://localhost:3001'                  // local backend
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
-function assignCategory(title, description) {
-  const text = (title + ' ' + description).toLowerCase();
-  if (text.includes('bug') || text.includes('error') || text.includes('fix')) return 'Bug';
-  if (text.includes('ui') || text.includes('design') || text.includes('look') || text.includes('feel')) return 'UI/UX';
-  if (text.includes('speed') || text.includes('fast') || text.includes('performance') || text.includes('slow')) return 'Performance';
-  return 'Feature Request';
-}
-
-// ✅ All routes must be async and await DB calls
-app.get('/api/ideas', async (req, res) => {
-  try {
-    const ideas = await db.getAllIdeas();
-    res.json(ideas);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/api/ideas', async (req, res) => {
-  const { title, description } = req.body;
-  if (!title || !description) {
-    return res.status(400).json({ error: 'Title and description are required' });
-  }
-  try {
-    const category = assignCategory(title, description);
-    const id = await db.addIdea(title, description, category);   // ← AWAIT is critical
-    const newIdea = { id, title, description, category, votes: 0 };
-    res.status(201).json(newIdea);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/api/ideas/:id/upvote', async (req, res) => {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    return res.status(400).json({ error: 'Invalid ID' });
-  }
-  try {
-    const success = await db.upvoteIdea(id);
-    if (!success) {
-      return res.status(404).json({ error: 'Idea not found' });
-    }
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Serve static frontend (production)
-const path = require('path');
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-});
-
-app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
-});
+// ... rest of your code (assignCategory, routes, etc.)
