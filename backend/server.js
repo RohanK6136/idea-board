@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Category assignment via keyword matching
 function assignCategory(title, description) {
   const text = (title + ' ' + description).toLowerCase();
   if (text.includes('bug') || text.includes('error') || text.includes('fix')) return 'Bug';
@@ -17,7 +16,6 @@ function assignCategory(title, description) {
   return 'Feature Request';
 }
 
-// GET all ideas – now async
 app.get('/api/ideas', async (req, res) => {
   try {
     const ideas = await db.getAllIdeas();
@@ -27,7 +25,6 @@ app.get('/api/ideas', async (req, res) => {
   }
 });
 
-// POST new idea – now async
 app.post('/api/ideas', async (req, res) => {
   const { title, description } = req.body;
   if (!title || !description) {
@@ -43,7 +40,6 @@ app.post('/api/ideas', async (req, res) => {
   }
 });
 
-// POST upvote – now async
 app.post('/api/ideas/:id/upvote', async (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) {
@@ -60,7 +56,6 @@ app.post('/api/ideas/:id/upvote', async (req, res) => {
   }
 });
 
-// Serve static frontend (for production)
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 app.get('*', (req, res) => {
