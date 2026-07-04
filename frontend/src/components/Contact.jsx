@@ -55,6 +55,25 @@ const Contact = () => {
                 </a>
               </p>
             </div>
+
+            <div className="social-links">
+              <a
+                className="social-button"
+                href="https://github.com/RohanK6136"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+              <a
+                className="social-button"
+                href="https://linkedin.com/in/rohan-kumar-bangalore-sukumar-702381273"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LinkedIn
+              </a>
+            </div>
           </div>
         </div>
       </div>

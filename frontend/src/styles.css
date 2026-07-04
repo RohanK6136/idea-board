@@ -579,6 +579,34 @@ html.dark-mode #contact {
   text-decoration: underline;
 }
 
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.contact-info .social-button {
+  min-width: 8rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--button-bg);
+  color: white;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.contact-info .social-button:hover {
+  background: #1d4ed8;
+  opacity: 1;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
 /* Section General Styles */
 section h2 {
   color: var(--text-primary);
