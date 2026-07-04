@@ -7,16 +7,8 @@ const About = () => {
         </h2>
         
         <div className="max-w-2xl mx-auto">
-          <p className="text-lg mb-6">
-            I'm Rohan Kumar Bangalore Sukumar, a passionate MERN Stack Developer with a love for creating beautiful and functional web applications. With expertise in MongoDB, Express, React, and Node.js, I build scalable and responsive solutions.
-          </p>
-          
-          <p className="text-lg mb-6">
-            I'm dedicated to writing clean, maintainable code and staying updated with the latest web development trends. My goal is to create web experiences that are not just functional but also delightful for users.
-          </p>
-          
           <p className="text-lg">
-            When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing knowledge with the developer community.
+            Python Full Stack Developer with hands-on experience in Django, REST API development, React.js, SQL, and Python. Currently working as a Full Stack Developer Intern at Dhee Coding Lab. MSc in Data Science &ndash; Awaiting Results (Heriot-Watt University). Knowledge of machine learning, deep learning, and basic Generative AI. Focused on building scalable web applications and AI-enabled solutions.
           </p>
         </div>
       </div>
