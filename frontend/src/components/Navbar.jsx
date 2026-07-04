@@ -29,7 +29,7 @@ const Navbar = () => {
     <nav className="bg-slate-900 text-white sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         <h1 className="text-2xl font-bold">
-          Pavan Portfolio
+          ROHAN KUMAR BANGALORE SUKUMAR
         </h1>
 
         <div className="flex items-center gap-6">
