@@ -17,16 +17,16 @@ const Skills = () => {
           {skills.map((skill, index) => (
             <div
               key={index}
-              className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition"
+              className="skill-card"
             >
-              <h3 className="text-xl font-bold mb-4 text-blue-600">
+              <h3 className="text-xl font-bold mb-4">
                 {skill.category}
               </h3>
               
               <ul className="space-y-2">
                 {skill.items.map((item, itemIndex) => (
-                  <li key={itemIndex} className="text-gray-700 dark:text-gray-300 flex items-center">
-                    <span className="mr-2">✓</span>
+                  <li key={itemIndex}>
+                    <span>✓</span>
                     {item}
                   </li>
                 ))}

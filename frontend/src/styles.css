@@ -273,6 +273,216 @@ input:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+/* About Section Styles */
+#about {
+  background: linear-gradient(to bottom, var(--bg-primary) 0%, rgba(237, 233, 254, 0.5) 100%);
+  transition: background 0.3s ease;
+}
+
+html.dark-mode #about {
+  background: linear-gradient(to bottom, var(--bg-primary) 0%, rgba(30, 27, 75, 0.5) 100%);
+}
+
+#about h2 {
+  color: var(--text-primary);
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+}
+
+#about p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+/* Skills Section Styles */
+#skills {
+  background: var(--bg-primary);
+  padding: 5rem 1.5rem !important;
+  transition: background 0.3s ease;
+}
+
+#skills h2 {
+  color: var(--text-primary);
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+}
+
+.skill-card {
+  background: var(--bg-secondary);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+.skill-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.skill-card h3 {
+  color: var(--button-bg);
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.skill-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.skill-card li {
+  color: var(--text-secondary);
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.skill-card li:hover {
+  color: var(--text-primary);
+}
+
+.skill-card span {
+  color: var(--button-bg);
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+/* Contact Section Styles */
+#contact {
+  background: linear-gradient(to bottom, var(--bg-primary) 0%, rgba(237, 233, 254, 0.5) 100%);
+  transition: background 0.3s ease;
+  padding: 5rem 1.5rem !important;
+}
+
+html.dark-mode #contact {
+  background: linear-gradient(to bottom, var(--bg-primary) 0%, rgba(30, 27, 75, 0.5) 100%);
+}
+
+#contact h2 {
+  color: var(--text-primary);
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+}
+
+.contact-form {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contact-form label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--button-bg);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.contact-form button {
+  background: var(--button-bg);
+  color: white;
+  padding: 0.875rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.contact-form button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.contact-info {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.contact-info p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  margin: 0.5rem 0;
+}
+
+.contact-info a {
+  color: var(--button-bg);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+}
+
+.contact-info a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Section General Styles */
+section h2 {
+  color: var(--text-primary);
+}
+
+section p {
+  color: var(--text-secondary);
+}
+
 @media (max-width: 640px) {
   body { padding: 1rem; }
   .idea-header { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+  
+  section {
+    padding: 2rem 1rem !important;
+  }
+  
+  section h2 {
+    font-size: 2rem !important;
+  }
+  
+  .contact-form,
+  .contact-info {
+    padding: 1.5rem;
+  }
+}
