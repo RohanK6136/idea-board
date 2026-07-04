@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Projects from './components/Projects';
-import Profile from './components/Profile';
 
 const API_URL = import.meta.env.DEV
   ? 'http://localhost:3001/api'
@@ -94,7 +93,6 @@ function App() {
       <Navbar />
       <Hero />
       <Projects />
-      <Profile />
       <div className="container">
         <h1>Idea Board</h1>
 
