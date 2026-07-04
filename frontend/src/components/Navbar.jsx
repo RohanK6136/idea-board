@@ -38,6 +38,7 @@ const Navbar = () => {
             <li><a className="nav-button" href="#about">About</a></li>
             <li><a className="nav-button" href="#skills">Skills</a></li>
             <li><a className="nav-button" href="#projects">Projects</a></li>
+            <li><a className="nav-button" href="#reflection">Reflection</a></li>
             <li><a className="nav-button" href="#contact">Contact</a></li>
           </ul>
           

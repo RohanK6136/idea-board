@@ -426,6 +426,50 @@ html.dark-mode #about {
   font-weight: bold;
 }
 
+/* Reflection Section Styles */
+.reflection-section {
+  background: linear-gradient(to bottom, var(--bg-primary) 0%, rgba(237, 233, 254, 0.5) 100%);
+  padding: 5rem 1.5rem;
+  transition: background 0.3s ease;
+}
+
+html.dark-mode .reflection-section {
+  background: linear-gradient(to bottom, var(--bg-primary) 0%, rgba(30, 27, 75, 0.5) 100%);
+}
+
+.reflection-section h2 {
+  color: var(--text-primary);
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.reflection-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.reflection-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 1.5rem;
+}
+
+.reflection-card h3 {
+  color: var(--button-bg);
+  font-size: 1.25rem;
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+}
+
+.reflection-card p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
 /* Contact Section Styles */
 #contact {
   background: linear-gradient(to bottom, var(--bg-primary) 0%, rgba(237, 233, 254, 0.5) 100%);

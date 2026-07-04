@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
+import Reflection from './components/Reflection';
 import Contact from './components/Contact';
 
 const API_URL = import.meta.env.DEV
@@ -98,6 +99,7 @@ function App() {
       <About />
       <Skills />
       <Projects />
+      <Reflection />
       <Contact />
       <div className="container">
         <h1>Idea Board</h1>
