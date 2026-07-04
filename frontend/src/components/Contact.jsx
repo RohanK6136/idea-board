@@ -45,13 +45,13 @@ const Contact = () => {
             </p>
             <div className="space-y-2">
               <p>
-                <a href="mailto:rohan@example.com">
-                  rohan@example.com
+                <a href="mailto:rohans76426@gmail.com">
+                  rohans76426@gmail.com
                 </a>
               </p>
               <p>
-                <a href="tel:+1234567890">
-                  +1 (234) 567-890
+                <a href="tel:+919606318240">
+                  +91 9606318240
                 </a>
               </p>
             </div>
