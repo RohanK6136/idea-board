@@ -1,9 +1,11 @@
 const Skills = () => {
   const skills = [
-    { category: "Frontend", items: ["React", "JavaScript", "Tailwind CSS", "HTML/CSS"] },
-    { category: "Backend", items: ["Node.js", "Express", "REST APIs", "Authentication"] },
-    { category: "Database", items: ["MongoDB", "SQL", "Firebase", "Database Design"] },
-    { category: "Tools", items: ["Git", "GitHub", "VSCode", "Postman"] }
+    { category: "Programming", items: ["Python", "JavaScript", "Java", "C++"] },
+    { category: "Frontend", items: ["HTML5", "CSS3", "React.js", "Bootstrap"] },
+    { category: "Backend", items: ["Django", "Flask", "Node.js", "Express.js", "REST APIs"] },
+    { category: "AI/ML", items: ["Pandas", "NumPy", "Scikit-learn", "TensorFlow", "Keras", "OpenCV", "CNN", "Basic Generative AI"] },
+    { category: "Databases", items: ["MySQL", "MongoDB", "SQLite"] },
+    { category: "Tools", items: ["Git", "GitHub", "VS Code", "Jupyter Notebook"] }
   ];
 
   return (
@@ -13,7 +15,7 @@ const Skills = () => {
           Skills
         </h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="skills-grid">
           {skills.map((skill, index) => (
             <div
               key={index}
