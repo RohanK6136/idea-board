@@ -280,6 +280,25 @@ section {
   object-fit: cover;
 }
 
+.resume-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.5rem;
+  background: white;
+  color: #2563eb;
+  border-radius: 8px;
+  padding: 0.85rem 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.resume-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.18);
+}
+
 @media (max-width: 720px) {
   .hero-profile-image {
     width: 96px;

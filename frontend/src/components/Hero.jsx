@@ -19,9 +19,13 @@ const Hero = () => {
           MERN Stack Developer
         </p>
 
-        <button className="bg-white text-blue-600 px-6 py-3 rounded-lg mt-6 font-semibold hover:scale-105 transition">
+        <a
+          className="resume-button"
+          href="/RohanKumar-bs-resume-2026.pdf"
+          download
+        >
           Download Resume
-        </button>
+        </a>
       </div>
     </section>
   );
