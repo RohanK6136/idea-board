@@ -34,8 +34,7 @@ app.post('/api/ideas', async (req, res) => {
   }
   try {
     const category = assignCategory(title, description);
-    const id = await db.addIdea(title, description, category);   // ← AWAIT is CRITICAL
-    const newIdea = { id, title, description, category, votes: 0 };
+    const newIdea = await db.addIdea(title, description, category);
     res.status(201).json(newIdea);
   } catch (err) {
     console.error('POST /api/ideas error:', err);

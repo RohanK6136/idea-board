@@ -6,6 +6,7 @@ const dbPath = path.join(__dirname, 'ideas.db');
 const db = new sqlite3.Database(dbPath);
 
 const dbAll = promisify(db.all.bind(db));
+const dbGet = promisify(db.get.bind(db));
 function dbRun(sql, ...params) {
   return new Promise((resolve, reject) => {
     db.run(sql, params, function (err) {
@@ -42,7 +43,7 @@ async function addIdea(title, description, category) {
     'INSERT INTO ideas (title, description, category) VALUES (?, ?, ?)',
     title, description, category
   );
-  return result.lastID;   // ← This returns the inserted row ID
+  return await dbGet('SELECT * FROM ideas WHERE id = ?', result.lastID);
 }
 
 async function upvoteIdea(id) {
