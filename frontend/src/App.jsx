@@ -166,8 +166,13 @@ function App() {
         boardsData = [await createRes.json()];
       }
       setBoards(boardsData);
-      const boardId = boardsData[0].id;
-      setCurrentBoardId(boardId);
+      if (Array.isArray(boardsData) && boardsData.length > 0) {
+        const boardId = boardsData[0].id;
+        setCurrentBoardId(boardId);
+      } else {
+        // No boards returned. Set currentBoardId to null and surface a helpful message.
+        setCurrentBoardId(null);
+      }
 
       // fetch tasks for board
       const tasksRes = await fetch(`${API_URL.replace('/api','')}/api/tasks?board_id=${boardId}`);
@@ -185,6 +190,10 @@ function App() {
     e.preventDefault();
     if (!title.trim() || !description.trim()) {
       setError('Please fill in both fields');
+      return;
+    }
+    if (!currentBoardId) {
+      setError('No board available to submit to. Please create a board (login required) or ask an admin to create one.');
       return;
     }
     setLoading(true);
