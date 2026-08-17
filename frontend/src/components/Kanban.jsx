@@ -294,14 +294,14 @@ const Kanban = ({
                                     <p>{idea.description}</p>
                                     <div className="idea-footer">
                                                                         <div style={{display:'flex', gap:8, alignItems:'center'}}>
-                                                                          <button onClick={(e) => { e.stopPropagation(); moveLeft(idea); }} title="Move left">◀</button>
-                                                                          <button onClick={(e) => { e.stopPropagation(); moveRight(idea); }} title="Move right">▶</button>
-                                                                          <button className="btn-upvote" onClick={(e) => { e.stopPropagation(); handleUpvote(idea.id); }} title="Upvote">
+                                                                          <button type="button" onClick={(e) => { e.stopPropagation(); moveLeft(idea); }} title="Move left">◀</button>
+                                                                          <button type="button" onClick={(e) => { e.stopPropagation(); moveRight(idea); }} title="Move right">▶</button>
+                                                                          <button type="button" className="btn-upvote" onClick={(e) => { e.stopPropagation(); handleUpvote(idea.id); }} title="Upvote">
                                                                             ▲ <span className="vote-count">{idea.votes}</span>
                                                                           </button>
-                                                                          <button className="btn-reset" onClick={(e) => { e.stopPropagation(); if (confirm('Reset votes for this idea?')) handleResetVotes(idea.id); }} title="Reset votes">Reset</button>
+                                                                          <button type="button" className="btn-reset" onClick={(e) => { e.stopPropagation(); if (confirm('Reset votes for this idea?')) handleResetVotes(idea.id); }} title="Reset votes">Reset</button>
                                                                         </div>
-                                      <span className="timestamp">{new Date(idea.created_at).toLocaleDateString()}</span>
+                                      <span className="timestamp" title={new Date(idea.created_at).toLocaleString()}>{new Date(idea.created_at).toLocaleString()}</span>
                                     </div>
                                   </article>
                                 )}
