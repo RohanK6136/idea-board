@@ -128,6 +128,7 @@ function App() {
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [debugFlash, setDebugFlash] = useState(false);
   const [draggedIdeaId, setDraggedIdeaId] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
 
@@ -225,12 +226,17 @@ function App() {
   const handleUpvote = async (id) => {
     try {
       console.log('Upvote clicked for id', id);
+      // flash visual indicator so clicks can be verified in-browser
+      setDebugFlash(true);
+      setTimeout(() => setDebugFlash(false), 1000);
       const headers = {};
       if (authToken) headers.Authorization = `Bearer ${authToken}`;
-      const res = await fetch(`${API_URL.replace('/api','')}/api/tasks/${id}/upvote`, { method: 'POST', headers });
+      const upvoteUrl = `${API_URL.replace('/api','')}/api/tasks/${id}/upvote`;
+      const res = await fetch(upvoteUrl, { method: 'POST', headers });
+      console.log('Upvote POST', upvoteUrl, 'status', res.status);
       if (!res.ok) {
         const errData = await res.json().catch(()=>null);
-        throw new Error((errData && errData.error) || 'Upvote failed');
+        throw new Error((errData && errData.error) || `Upvote failed (status ${res.status})`);
       }
 
       // Fetch latest task to ensure UI shows server-side votes
