@@ -233,6 +233,20 @@ app.post('/api/tasks/:id/upvote', async (req, res) => {
   }
 });
 
+// Reset votes for a task (convenience endpoint)
+app.post('/api/tasks/:id/reset', async (req, res) => {
+  const id = Number(req.params.id);
+  if (!id) return res.status(400).json({ error: 'Invalid id' });
+  try {
+    const ok = await db.resetTaskVotes(id);
+    if (!ok) return res.status(404).json({ error: 'Task not found' });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('POST /api/tasks/:id/reset error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Comments
 app.get('/api/tasks/:id/comments', async (req, res) => {
   const id = Number(req.params.id);

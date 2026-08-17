@@ -199,6 +199,11 @@ async function upvoteTask(id) {
   return result.changes > 0;
 }
 
+async function resetTaskVotes(id) {
+  const result = await dbRun('UPDATE tasks SET votes = 0 WHERE id = ?', id);
+  return result.changes > 0;
+}
+
 // Comments
 async function getCommentsForTask(taskId) {
   return await dbAll('SELECT c.id, c.task_id, c.user_id, c.parent_id, c.body, c.created_at, u.username FROM comments c LEFT JOIN users u ON u.id = c.user_id WHERE c.task_id = ? ORDER BY c.created_at ASC', taskId);
@@ -249,4 +254,5 @@ module.exports = {
   ,getUserByUsername, getUserById, createUser
   ,getCommentsForTask, addCommentToTask, deleteComment
   ,getAttachmentsForTask, addAttachmentToTask, deleteAttachment
+  ,resetTaskVotes
 };

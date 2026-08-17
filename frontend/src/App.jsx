@@ -259,6 +259,29 @@ function App() {
     }
   };
 
+  const handleResetVotes = async (id) => {
+    try {
+      console.log('Reset votes clicked for id', id);
+      const headers = {};
+      if (authToken) headers.Authorization = `Bearer ${authToken}`;
+      const res = await fetch(`${API_URL.replace('/api','')}/api/tasks/${id}/reset`, { method: 'POST', headers });
+      console.log('Reset POST status', res.status);
+      if (!res.ok) throw new Error('Reset failed');
+      // fetch updated task
+      const taskRes = await fetch(`${API_URL.replace('/api','')}/api/tasks/${id}`);
+      if (taskRes.ok) {
+        const updated = await taskRes.json();
+        setIdeas(prev => prev.map(idea => idea.id === id ? { ...idea, votes: Number(updated.votes || 0) } : idea));
+        return;
+      }
+      // fallback local reset
+      setIdeas(prev => prev.map(idea => idea.id === id ? { ...idea, votes: 0 } : idea));
+    } catch (err) {
+      console.error('Reset error', err);
+      setError(err.message || 'Reset failed');
+    }
+  };
+
   const moveIdeaToStatus = (ideaId, targetStatus) => {
     if (!ideaId || !targetStatus) return;
 
@@ -335,9 +358,11 @@ function App() {
         getPriorityLevel={getPriorityLevel}
         getStatusClass={getStatusClass}
         handleUpvote={handleUpvote}
+        handleResetVotes={handleResetVotes}
         apiBase={API_URL}
         apiToken={authToken}
       />
+      {debugFlash && <div className="debug-flash">Click registered</div>}
     </div>
   );
 }
