@@ -4,6 +4,6 @@ services:
     env: node
     plan: free
     branch: main
-    buildCommand: 'echo "skip build"'
+    buildCommand: 'npm --prefix frontend install && npm --prefix frontend run build'
     startCommand: 'node backend/server.js'
     root: ./
