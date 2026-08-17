@@ -77,7 +77,17 @@ app.post('/api/ideas/:id/upvote', async (req, res) => {
 // Boards CRUD
 app.get('/api/boards', async (req, res) => {
   try {
-    const boards = await db.getAllBoards();
+    let boards = await db.getAllBoards();
+    if (!Array.isArray(boards) || boards.length === 0) {
+      // No boards exist yet — create a default public board so anonymous users can submit tasks
+      try {
+        const defaultBoard = await db.addBoard('Main Board', 'Default project board');
+        boards = [defaultBoard];
+      } catch (err) {
+        console.error('Failed to create default board:', err.message);
+        // proceed to return empty list if creation fails
+      }
+    }
     res.json(boards);
   } catch (err) {
     console.error('GET /api/boards error:', err);
