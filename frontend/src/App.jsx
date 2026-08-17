@@ -224,15 +224,31 @@ function App() {
 
   const handleUpvote = async (id) => {
     try {
+      console.log('Upvote clicked for id', id);
       const headers = {};
       if (authToken) headers.Authorization = `Bearer ${authToken}`;
       const res = await fetch(`${API_URL.replace('/api','')}/api/tasks/${id}/upvote`, { method: 'POST', headers });
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || 'Upvote failed');
+        const errData = await res.json().catch(()=>null);
+        throw new Error((errData && errData.error) || 'Upvote failed');
       }
+
+      // Fetch latest task to ensure UI shows server-side votes
+      try {
+        const taskRes = await fetch(`${API_URL.replace('/api','')}/api/tasks/${id}`);
+        if (taskRes.ok) {
+          const updated = await taskRes.json();
+          setIdeas(prev => prev.map(idea => idea.id === id ? { ...idea, votes: Number(updated.votes || 0) } : idea));
+          return;
+        }
+      } catch (fetchErr) {
+        console.warn('Failed to fetch updated task after upvote', fetchErr.message);
+      }
+
+      // Fallback: increment locally
       setIdeas(prev => prev.map(idea => idea.id === id ? { ...idea, votes: (Number(idea.votes)||0) + 1 } : idea));
     } catch (err) {
+      console.error('Upvote error', err);
       setError(err.message);
     }
   };
