@@ -387,6 +387,14 @@ function authenticateToken(req, res, next) {
   }
 }
 
+// register integration endpoints
+try {
+  const integrationsRegister = require('./integrations/register');
+  integrationsRegister.register(app, authenticateToken);
+} catch (e) {
+  console.warn('Integrations registration failed:', e.message);
+}
+
 app.post('/api/auth/register', async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'username and password required' });
