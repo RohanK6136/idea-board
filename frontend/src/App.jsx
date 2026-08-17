@@ -6,6 +6,8 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Reflection from './components/Reflection';
 import Contact from './components/Contact';
+import Kanban from './components/Kanban';
+import AuthPanel from './components/AuthPanel';
 
 const API_URL = import.meta.env.DEV
   ? 'http://localhost:3001/api'
@@ -118,6 +120,10 @@ const boardConfig = [
 
 function App() {
   const [ideas, setIdeas] = useState([]);
+  const [boards, setBoards] = useState([]);
+  const [currentBoardId, setCurrentBoardId] = useState(null);
+  const [authUser, setAuthUser] = useState(null);
+  const [authToken, setAuthToken] = useState(() => localStorage.getItem('idea_board_token') || '');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -126,34 +132,50 @@ function App() {
   const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => {
-    fetchIdeas();
+    // load stored auth
+    const stored = localStorage.getItem('idea_board_token');
+    if (stored) setAuthToken(stored);
+    initBoardsAndTasks();
   }, []);
 
+  const handleAuth = ({ user, token }) => {
+    setAuthUser(user);
+    setAuthToken(token);
+    initBoardsAndTasks();
+  };
   const normalizeIdeas = (items) =>
     items.map(item => ({
       ...item,
       votes: Number(item.votes || 0),
       status: item.status || getIdeaStatus(item),
-      tags: item.tags && item.tags.length ? item.tags : deriveTags(item)
+      tags: item.labels ? (typeof item.labels === 'string' ? JSON.parse(item.labels) : item.labels) : (item.tags && item.tags.length ? item.tags : deriveTags(item))
     }));
 
-  const fetchIdeas = async () => {
+  const initBoardsAndTasks = async () => {
     try {
-      const res = await fetch(`${API_URL}/ideas`);
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(`Server error: ${res.status} - ${errText}`);
+      // fetch or create default board
+      let boardsRes = await fetch(`${API_URL.replace('/api','')}/api/boards`);
+      if (!boardsRes.ok) throw new Error('Failed to fetch boards');
+      let boardsData = await boardsRes.json();
+      if ((!Array.isArray(boardsData) || boardsData.length === 0) && authToken) {
+        const createRes = await fetch(`${API_URL.replace('/api','')}/api/boards`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+          body: JSON.stringify({ name: 'Main Board', description: 'Default project board' })
+        });
+        boardsData = [await createRes.json()];
       }
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setIdeas(data.length ? normalizeIdeas(data) : normalizeIdeas(starterIdeas));
-      } else {
-        console.error('Expected array, got:', data);
-        setIdeas(normalizeIdeas(starterIdeas));
-        setError('Received invalid data from server');
-      }
+      setBoards(boardsData);
+      const boardId = boardsData[0].id;
+      setCurrentBoardId(boardId);
+
+      // fetch tasks for board
+      const tasksRes = await fetch(`${API_URL.replace('/api','')}/api/tasks?board_id=${boardId}`);
+      if (!tasksRes.ok) throw new Error('Failed to fetch tasks');
+      const tasks = await tasksRes.json();
+      setIdeas(tasks.length ? normalizeIdeas(tasks) : normalizeIdeas(starterIdeas));
     } catch (err) {
-      console.error('Fetch error:', err);
+      console.error('Init error:', err);
       setError(err.message);
       setIdeas(normalizeIdeas(starterIdeas));
     }
@@ -168,23 +190,22 @@ function App() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`${API_URL}/ideas`, {
+      if (!authToken) {
+        setError('Please login to create tasks');
+        return;
+      }
+      const res = await fetch(`${API_URL.replace('/api','')}/api/tasks`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description })
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ board_id: currentBoardId, title, description, status: 'Backlog' })
       });
       if (!res.ok) {
         const errData = await res.json();
         throw new Error(errData.error || 'Submission failed');
       }
-      const newIdea = await res.json();
-      const normalizedIdea = {
-        ...newIdea,
-        status: getIdeaStatus(newIdea),
-        tags: deriveTags(newIdea),
-        votes: Number(newIdea.votes || 0)
-      };
-      setIdeas(prev => [normalizedIdea, ...prev]);
+      const newTask = await res.json();
+      const normalizedTask = { ...newTask, status: newTask.status || 'Backlog', tags: deriveTags(newTask), votes: Number(newTask.votes || 0) };
+      setIdeas(prev => [normalizedTask, ...prev]);
       setTitle('');
       setDescription('');
     } catch (err) {
@@ -196,18 +217,13 @@ function App() {
 
   const handleUpvote = async (id) => {
     try {
-      const res = await fetch(`${API_URL}/ideas/${id}/upvote`, {
-        method: 'POST'
-      });
+      if (!authToken) { setError('Please login to upvote'); return; }
+      const res = await fetch(`${API_URL.replace('/api','')}/api/tasks/${id}/upvote`, { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}` } });
       if (!res.ok) {
         const errData = await res.json();
         throw new Error(errData.error || 'Upvote failed');
       }
-      setIdeas(prev =>
-        prev.map(idea =>
-          idea.id === id ? { ...idea, votes: idea.votes + 1 } : idea
-        )
-      );
+      setIdeas(prev => prev.map(idea => idea.id === id ? { ...idea, votes: (Number(idea.votes)||0) + 1 } : idea));
     } catch (err) {
       setError(err.message);
     }
@@ -252,6 +268,9 @@ function App() {
   return (
     <div>
       <Navbar />
+      <div className="auth-row container">
+        <AuthPanel apiBase={API_URL} onAuth={handleAuth} />
+      </div>
       <Hero />
       <About />
       <Skills />
@@ -259,175 +278,18 @@ function App() {
       <Reflection />
       <Contact />
 
-      <section className="board-section">
-        <div className="board-shell container">
-          <div className="board-header">
-            <div>
-              <p className="eyebrow">Product discovery</p>
-              <h1>Idea Board</h1>
-            </div>
-            <div className="board-metrics">
-              <div className="metric">
-                <span className="metric-label">Ideas</span>
-                <strong>{metrics.total}</strong>
-              </div>
-              <div className="metric">
-                <span className="metric-label">Priority</span>
-                <strong>{metrics.prioritized}</strong>
-              </div>
-              <div className="metric">
-                <span className="metric-label">Votes</span>
-                <strong>{metrics.votes}</strong>
-              </div>
-            </div>
-          </div>
-
-          <div className="board-filters" aria-label="Board filters">
-            {['all', 'high', 'other'].map(filter => (
-              <button
-                key={filter}
-                type="button"
-                className={activeFilter === filter ? 'filter-button active' : 'filter-button'}
-                onClick={() => setActiveFilter(filter)}
-              >
-                {filter === 'all' ? 'All ideas' : filter === 'high' ? 'High priority' : 'Needs attention'}
-              </button>
-            ))}
-          </div>
-
-          <div className="board-context-bar">
-            <div className="context-copy">
-              <span className="context-chip">Context-aware</span>
-              <span>Prioritize the ideas that can deliver the strongest product impact.</span>
-            </div>
-            <div className="drag-hint">Drag cards between stages</div>
-          </div>
-
-          <div className="signal-grid">
-            <div className="signal-card signal-main">
-              <span className="signal-label">Top idea</span>
-              <strong>{topIdea ? topIdea.title : 'No ideas yet'}</strong>
-              <small>{topIdea ? `${topIdea.votes} votes · ${topIdea.category}` : 'Add the first opportunity'}</small>
-            </div>
-            <div className="signal-card">
-              <span className="signal-label">In review</span>
-              <strong>{metrics.review}</strong>
-              <small>Ideas being validated</small>
-            </div>
-            <div className="signal-card">
-              <span className="signal-label">Ready to build</span>
-              <strong>{metrics.build}</strong>
-              <small>High-confidence bets</small>
-            </div>
-            <div className="signal-card">
-              <span className="signal-label">Momentum</span>
-              <strong>{metrics.votes}</strong>
-              <small>Total community votes</small>
-            </div>
-          </div>
-
-          <div className="board-layout">
-            <aside className="idea-form-panel">
-              <div className="panel-header">
-                <h2>Submit an idea</h2>
-                <span>Capture the next opportunity</span>
-              </div>
-
-              <form onSubmit={handleSubmit} className="idea-form">
-                <input
-                  type="text"
-                  placeholder="Idea title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  disabled={loading}
-                />
-                <textarea
-                  placeholder="Describe the problem, opportunity, or user need..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  disabled={loading}
-                  rows="4"
-                />
-                <button type="submit" disabled={loading}>
-                  {loading ? 'Submitting...' : 'Add to board'}
-                </button>
-                {error && <div className="error">{error}</div>}
-              </form>
-            </aside>
-
-            <div className="board-columns">
-              {boardColumns.map(column => (
-                <div
-                  key={column.id}
-                  className={`board-column ${column.accent}`}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => moveIdeaToStatus(draggedIdeaId, column.status)}
-                >
-                  <div className="column-header">
-                    <div>
-                      <h3>{column.title}</h3>
-                      <small>{column.subtitle}</small>
-                    </div>
-                    <span className="column-count">{column.ideas.length}</span>
-                  </div>
-
-                  <div className="ideas-feed">
-                    {column.ideas.length === 0 ? (
-                      <div className="empty-column">
-                        <p>No ideas here yet.</p>
-                      </div>
-                    ) : (
-                      column.ideas.map(idea => {
-                        const status = getIdeaStatus(idea);
-                        return (
-                          <article
-                            key={idea.id}
-                            className={`idea-card status-${getStatusClass(status)}`}
-                            draggable
-                            onDragStart={(e) => {
-                              e.dataTransfer.effectAllowed = 'move';
-                              setDraggedIdeaId(idea.id);
-                            }}
-                            onDragEnd={() => setDraggedIdeaId(null)}
-                          >
-                            <div className="idea-topline">
-                              <span className="category">{idea.category}</span>
-                              <span className="status-pill">{status}</span>
-                            </div>
-
-                            <div className="idea-meta-row">
-                              <span className={`priority-badge priority-${getPriorityLevel(idea).toLowerCase()}`}>
-                                {getPriorityLevel(idea)} priority
-                              </span>
-                            </div>
-
-                            <div className="tag-row">
-                              {(idea.tags || deriveTags(idea)).map(tag => (
-                                <span key={tag} className="tag-chip">{tag}</span>
-                              ))}
-                            </div>
-
-                            <h4>{idea.title}</h4>
-                            <p>{idea.description}</p>
-                            <div className="idea-footer">
-                              <button onClick={() => handleUpvote(idea.id)}>
-                                ▲ {idea.votes}
-                              </button>
-                              <span className="timestamp">
-                                {new Date(idea.created_at).toLocaleDateString()}
-                              </span>
-                            </div>
-                          </article>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <Kanban
+        ideas={ideas}
+        setIdeas={setIdeas}
+        boardConfig={boardConfig}
+        getIdeaStatus={getIdeaStatus}
+        deriveTags={deriveTags}
+        getPriorityLevel={getPriorityLevel}
+        getStatusClass={getStatusClass}
+        handleUpvote={handleUpvote}
+        apiBase={API_URL}
+        apiToken={authToken}
+      />
     </div>
   );
 }
