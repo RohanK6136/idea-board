@@ -1,3 +1,24 @@
+AI Assistant Logs Summary
+
+This file summarizes the key prompts, decisions, and fixes during development.
+
+1) Initial instructions to assistant:
+- Deploy changes to Render and update live URL.
+
+2) Prompts used for implementing Airtable integration:
+- "Implement full Airtable import/export using the airtable package. Use AIRTABLE_API_KEY and AIRTABLE_BASE_ID from env or opts."
+
+3) Issues encountered and fixes:
+- Assistant recommended `airtable@^1.8.1` which does not exist. I ran `npm view airtable version` and updated to `^0.12.2`.
+- Adjusted server endpoints to allow anonymous idea submission and upvotes per challenge UX.
+- Added public idea submission form in the frontend.
+
+4) Important commands run (approximate):
+- `git add . && git commit -m '...' && git push` to trigger Render deploys.
+- `npm --prefix backend install` to install backend deps.
+- `curl -I https://idea-board-aj19.onrender.com` to verify site status.
+
+For a complete chat transcript, see the exported conversation logs used during development (omitted for privacy). This summary highlights prompts and corrections relevant to reviewers.
 --- AI Logs for Idea Board ---
 
 1. Prompt: "Build full-stack app with React, Node, SQLite."
