@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "render-start": "npm --prefix ../frontend install --no-audit --no-fund && npm --prefix ../frontend run build && node server.js",
+    "render-start": "node server.js",
     "migrate:sqlite-to-postgres": "node scripts/migrate-sqlite-to-postgres.js",
     "trigger:render-deploy": "node scripts/trigger_render_deploy.js"
   },
