@@ -190,13 +190,11 @@ function App() {
     setLoading(true);
     setError('');
     try {
-      if (!authToken) {
-        setError('Please login to create tasks');
-        return;
-      }
+      const headers = { 'Content-Type': 'application/json' };
+      if (authToken) headers.Authorization = `Bearer ${authToken}`;
       const res = await fetch(`${API_URL.replace('/api','')}/api/tasks`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        headers,
         body: JSON.stringify({ board_id: currentBoardId, title, description, status: 'Backlog' })
       });
       if (!res.ok) {
@@ -217,8 +215,9 @@ function App() {
 
   const handleUpvote = async (id) => {
     try {
-      if (!authToken) { setError('Please login to upvote'); return; }
-      const res = await fetch(`${API_URL.replace('/api','')}/api/tasks/${id}/upvote`, { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}` } });
+      const headers = {};
+      if (authToken) headers.Authorization = `Bearer ${authToken}`;
+      const res = await fetch(`${API_URL.replace('/api','')}/api/tasks/${id}/upvote`, { method: 'POST', headers });
       if (!res.ok) {
         const errData = await res.json();
         throw new Error(errData.error || 'Upvote failed');

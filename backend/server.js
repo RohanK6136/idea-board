@@ -146,7 +146,8 @@ app.get('/api/tasks', async (req, res) => {
   }
 });
 
-app.post('/api/tasks', authenticateToken, async (req, res) => {
+app.post('/api/tasks', async (req, res) => {
+  // Allow anonymous task creation (no auth required)
   const { board_id, title, description, status, labels, priority, due_date } = req.body;
   if (!board_id || !title) return res.status(400).json({ error: 'board_id and title are required' });
   try {
@@ -208,7 +209,8 @@ app.post('/api/tasks/:id/move', authenticateToken, async (req, res) => {
   }
 });
 
-app.post('/api/tasks/:id/upvote', authenticateToken, async (req, res) => {
+app.post('/api/tasks/:id/upvote', async (req, res) => {
+  // Allow anonymous upvotes (no auth required)
   const id = Number(req.params.id);
   if (!id) return res.status(400).json({ error: 'Invalid id' });
   try {
