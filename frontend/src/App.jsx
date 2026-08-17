@@ -277,6 +277,24 @@ function App() {
       <Reflection />
       <Contact />
 
+      <section className="container" style={{ marginTop: 20 }}>
+        <div className="idea-form-panel">
+          <div className="panel-header">
+            <h2>Share an Idea</h2>
+            <span>Submit a title and description — category is assigned automatically.</span>
+          </div>
+          <form className="idea-form" onSubmit={handleSubmit}>
+            <input placeholder="Idea title" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <textarea placeholder="Describe your idea" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Submit Idea'}</button>
+              <button type="button" onClick={() => { setTitle(''); setDescription(''); }}>Clear</button>
+            </div>
+            {error && <div className="error">{error}</div>}
+          </form>
+        </div>
+      </section>
+
       <Kanban
         ideas={ideas}
         setIdeas={setIdeas}
