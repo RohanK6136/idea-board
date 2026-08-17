@@ -619,7 +619,18 @@ html.dark-mode .idea-card {
   align-items: center;
   gap: 0.5rem;
   margin-top: 1rem;
+  flex-wrap: wrap;
 }
+
+.card-controls {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.card-controls button { display: inline-flex; }
 
 .idea-footer button {
   background: rgba(15,23,42,0.03);
@@ -642,6 +653,19 @@ html.dark-mode .idea-card {
   white-space: nowrap;
   overflow: visible;
   opacity: 0.95;
+  flex: 0 0 auto;
+  margin-left: 0.8rem;
+  text-align: right;
+}
+
+/* ensure vote count and reset remain visible on narrow screens */
+.vote-count { display: inline-block; min-width: 22px; text-align: center; }
+
+@media (max-width: 900px) {
+  .card-controls { gap: 0.4rem; }
+  .btn-reset { padding: 0.28rem 0.5rem; font-size: 0.78rem; }
+  .btn-upvote { padding: 0.3rem 0.5rem; }
+  .idea-card p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 }
 
 /* Upvote & Reset buttons styling */
