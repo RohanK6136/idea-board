@@ -177,31 +177,15 @@ const Kanban = ({
   };
 
   const deleteComment = async (id) => {
-    if (!apiBase || !apiToken) return;
-    if (!confirm('Delete this comment?')) return;
-    try {
-      const res = await fetch(`${apiBase}/comments/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${apiToken}` } });
-      if (res.ok) {
-        setComments(prev => prev.filter(c => c.id !== id && c.parent_id !== id));
-      } else {
-        const err = await res.json();
-        console.error('Delete comment failed', err);
-      }
-    } catch (err) { console.error('Delete comment request failed', err); }
+    // Deletion disabled by policy: keep history and only allow adding/moving.
+    console.warn('Delete comment is disabled; operation skipped for safety.');
+    return;
   };
 
   const deleteAttachment = async (id) => {
-    if (!apiBase || !apiToken) return;
-    if (!confirm('Delete this attachment? This will remove the file if you uploaded it.')) return;
-    try {
-      const res = await fetch(`${apiBase}/attachments/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${apiToken}` } });
-      if (res.ok) {
-        setAttachments(prev => prev.filter(a => a.id !== id));
-      } else {
-        const err = await res.json();
-        console.error('Delete attachment failed', err);
-      }
-    } catch (err) { console.error('Delete attachment request failed', err); }
+    // Deletion disabled: keep attachments intact. No-op.
+    console.warn('Delete attachment is disabled; operation skipped for safety.');
+    return;
   };
 
   const postAttachment = async (taskId, url) => {
@@ -365,7 +349,7 @@ const Kanban = ({
                   <li key={a.id} style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
                     <a href={a.url} target="_blank" rel="noreferrer">{a.filename || a.url}</a>
                     <div style={{display:'flex', gap:8}}>
-                      <button onClick={(e) => { e.stopPropagation(); deleteAttachment(a.id); }}>Delete</button>
+                      <span style={{opacity:0.8}}>—</span>
                     </div>
                   </li>
                 ))}
@@ -397,7 +381,6 @@ const Kanban = ({
                             <div><strong>{c.username || 'User'}</strong></div>
                             <div style={{display:'flex', gap:8}}>
                               <button onClick={(e) => { e.stopPropagation(); startEditComment(c); }}>Edit</button>
-                              <button onClick={(e) => { e.stopPropagation(); deleteComment(c.id); }}>Delete</button>
                             </div>
                           </div>
                           {editingCommentId === c.id ? (
@@ -419,7 +402,6 @@ const Kanban = ({
                                   <strong>{r.username || 'User'}</strong>
                                   <div style={{display:'flex', gap:8}}>
                                     <button onClick={(e) => { e.stopPropagation(); startEditComment(r); }}>Edit</button>
-                                    <button onClick={(e) => { e.stopPropagation(); deleteComment(r.id); }}>Delete</button>
                                   </div>
                                 </div>
                                 {editingCommentId === r.id ? (

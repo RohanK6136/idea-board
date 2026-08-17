@@ -1,0 +1,9 @@
+services:
+  - name: idea-board
+    type: web
+    env: node
+    plan: free
+    branch: main
+    buildCommand: 'echo "skip build"'
+    startCommand: 'node backend/server.js'
+    root: ./
